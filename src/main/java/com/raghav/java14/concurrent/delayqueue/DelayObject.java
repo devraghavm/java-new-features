@@ -1,0 +1,33 @@
+package com.raghav.java14.concurrent.delayqueue;
+
+import com.google.common.primitives.Ints;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
+
+public class DelayObject implements Delayed {
+    private String data;
+    private long startTime;
+
+    public DelayObject(String data, long delayInMilliseconds) {
+        this.data = data;
+        this.startTime = System.currentTimeMillis() + delayInMilliseconds;
+    }
+
+    @Override
+    public long getDelay(@NotNull TimeUnit unit) {
+        long diff = startTime - System.currentTimeMillis();
+        return unit.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public int compareTo(@NotNull Delayed o) {
+        return Ints.saturatedCast(this.startTime - ((DelayObject) o).startTime);
+    }
+
+    @Override
+    public String toString() {
+        return "{" + "data='" + data + '\'' + ", startTime=" + startTime + '}';
+    }
+}
